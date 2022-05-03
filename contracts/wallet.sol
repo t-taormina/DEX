@@ -41,10 +41,20 @@ contract Wallet is Ownable {
         balances[msg.sender][_ticker] = balances[msg.sender][_ticker].add(amount); 
     }
 
+    function depositEth() payable external {
+        balances[msg.sender][bytes32("ETH")] = balances[msg.sender][bytes32("ETH")].add(msg.value);
+    }
+
     function withdraw(uint amount, bytes32 _ticker) tokenExists(_ticker) external {
         require(balances[msg.sender][_ticker] >= amount, "Insufficient balance");
         balances[msg.sender][_ticker] = balances[msg.sender][_ticker].sub(amount);
         IERC20(tokenMapping[_ticker].tokenAddress).transfer(msg.sender, amount);
+    }
+    
+    function withdrawEth(uint amount) external {
+        require(balances[msg.sender][bytes32("ETH")] >= amount, "Insufficient balance");
+        balances[msg.sender][bytes32("ETH")] = balances[msg.sender][bytes32("ETH")].sub(amount);
+        msg.sender.call{value:amount}("");
     }
 
 }
