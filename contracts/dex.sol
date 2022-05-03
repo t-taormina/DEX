@@ -67,7 +67,5 @@ contract Dex is Wallet {
         }
         IDtracker = IDtracker.add(1);
     }
-
-    function 
     
 }
